@@ -15,23 +15,27 @@ class TextColors:
 
 endpoint_url = []
 endpoint_dir = []
-endpoint_const = []
+endpoint_files = []
 pattern = r"^[a-zA-Z0-9_/:&?%.\-=\+!@$#^*_]*$"
-
+ext = (".png", ".jpg", ".jpeg", ".woff", "woff2", ".php", ".js", ".json", ".html", ".min.js", ".min.css")
+url_path = ("http", "https")
+direc = ("/", "./")
 def parse_endpoint(file_path):
     try:
         with open(file_path, 'r') as f:
             for l_no, line in enumerate(f, start=1):
                 words = line.strip().split('"')
-                #print(f"Words: {words}")
                 for i in words:
                     if re.match(pattern, i):
-                        if i.startswith("/") or i.startswith("./"):
+                        if i.startswith(direc) and not (i.endswith(ext)): # check application endpoints
                             if i not in endpoint_dir:
                                 endpoint_dir.append(i)
-                        if i.startswith("https://") or i.startswith("http://"):
+                        if i.startswith(url_path) and not (i.endswith(ext)): # check urls without extensions
                             if i not in endpoint_url:
                                 endpoint_url.append(i)
+                        if i.startswith(url_path) or i.startswith(direc) and (i.endswith(ext)): # check urls with extensions
+                            if i not in endpoint_files:
+                                endpoint_files.append(i)
         if endpoint_url:
            print("\n" + TextColors.BLUE +  "--- URL endpoints ---" + TextColors.RESET)
         for url in endpoint_url:
@@ -46,10 +50,16 @@ def parse_endpoint(file_path):
         if endpoint_dir:
             print("\n" + TextColors.BLUE + "--- Application endpoints ---" + TextColors.RESET)
         for directory in endpoint_dir:
-                print(f"{directory}")
-    except:
-        print("error")
-
+            print(f"{directory}")
+        if endpoint_files:
+            endpoint_files.sort()
+            print("\n" + TextColors.BLUE + "--- Files in the sources ---" + TextColors.RESET)
+        for extension in endpoint_files:
+            print(f"{extension}")
+    except FileNotFoundError:
+        print("Error: File not found.")
+    except Exception as e:
+        print(f"Unexpected error: {e}")
         
 def main():
     banner()
