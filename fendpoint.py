@@ -27,7 +27,7 @@ def parse_endpoint(file_path):
                 words = line.strip().split('"')
                 for i in words:
                     if re.match(pattern, i):
-                        if i.startswith(direc) and not (i.endswith(ext)): # check application endpoints
+                        if i.startswith(direc) or "/" in i and not (i.endswith(ext)): # check application endpoints
                             if i not in endpoint_dir:
                                 endpoint_dir.append(i)
                         if i.startswith(url_path) and not (i.endswith(ext)): # check urls without extensions
@@ -86,5 +86,4 @@ def banner():
 
 if __name__ == "__main__":
     main()
-#parse_endpoint("/home/kali/fendpoint/text.txt")
 
