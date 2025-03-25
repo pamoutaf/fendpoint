@@ -17,7 +17,7 @@ endpoint_url = []
 endpoint_dir = []
 endpoint_files = []
 pattern = r"^[a-zA-Z0-9_/:&?%.\-=\+!@$#^*_]*$"
-ext = (".png", ".jpg", ".jpeg", ".woff", "woff2", ".php", ".js", ".json", ".html", ".min.js", ".min.css")
+ext = (".png", ".jpg", ".jpeg", ".woff", "woff2", ".php", ".js", ".json", ".html", ".min.js", ".min.css", ".css")
 url_path = ("http", "https")
 direc = ("/", "./")
 def parse_endpoint(file_path):
@@ -27,7 +27,7 @@ def parse_endpoint(file_path):
                 words = line.strip().split('"')
                 for i in words:
                     if re.match(pattern, i):
-                        if i.startswith(direc) or "/" in i and not (i.endswith(ext)): # check application endpoints
+                        if (i.startswith(direc) or '/' in i) and not (i.endswith(ext)): # check application endpoints
                             if i not in endpoint_dir:
                                 endpoint_dir.append(i)
                         if i.startswith(url_path) and not (i.endswith(ext)): # check urls without extensions
